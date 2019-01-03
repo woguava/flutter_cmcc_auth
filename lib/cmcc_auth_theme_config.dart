@@ -46,6 +46,8 @@ class CMCCAuthThemeConfig{
   int customBodyBtnTextSize;
   bool customBodyBtnHidden;
   int customBodyBtnOffsetY;
+  bool cmccDebug;
+  bool useCmccSms;
 
   CMCCAuthThemeConfig({
     int navColor : -16742704,
@@ -89,7 +91,9 @@ class CMCCAuthThemeConfig{
     int customBodyBtnTextColor : -60338,
     int customBodyBtnTextSize : 13,
     bool customBodyBtnHidden : true,
-    int customBodyBtnOffsetY : 450
+    int customBodyBtnOffsetY : 450,
+    bool cmccDebug : true,
+    bool useCmccSms : false
   }){
     this.navColor=              navColor;
     this.navText=               navText;
@@ -133,6 +137,8 @@ class CMCCAuthThemeConfig{
     this.customBodyBtnTextSize = customBodyBtnTextSize;
     this.customBodyBtnHidden = customBodyBtnHidden;
     this.customBodyBtnOffsetY = customBodyBtnOffsetY;
+    this.cmccDebug = cmccDebug;
+    this.useCmccSms = useCmccSms;
   }
 
   factory CMCCAuthThemeConfig.fromJson(Map<String, dynamic> json) => _$CMCCAuthThemeConfigFromJson(json);

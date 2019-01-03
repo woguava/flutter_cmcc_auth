@@ -49,7 +49,9 @@ CMCCAuthThemeConfig _$CMCCAuthThemeConfigFromJson(Map<String, dynamic> json) {
       customBodyBtnTextColor: json['customBodyBtnTextColor'] as int,
       customBodyBtnTextSize: json['customBodyBtnTextSize'] as int,
       customBodyBtnHidden: json['customBodyBtnHidden'] as bool,
-      customBodyBtnOffsetY: json['customBodyBtnOffsetY'] as int);
+      customBodyBtnOffsetY: json['customBodyBtnOffsetY'] as int,
+      cmccDebug: json['cmccDebug'] as bool,
+      useCmccSms: json['useCmccSms'] as bool);
 }
 
 Map<String, dynamic> _$CMCCAuthThemeConfigToJson(
@@ -96,5 +98,7 @@ Map<String, dynamic> _$CMCCAuthThemeConfigToJson(
       'customBodyBtnTextColor': instance.customBodyBtnTextColor,
       'customBodyBtnTextSize': instance.customBodyBtnTextSize,
       'customBodyBtnHidden': instance.customBodyBtnHidden,
-      'customBodyBtnOffsetY': instance.customBodyBtnOffsetY
+      'customBodyBtnOffsetY': instance.customBodyBtnOffsetY,
+      'cmccDebug': instance.cmccDebug,
+      'useCmccSms': instance.useCmccSms
     };

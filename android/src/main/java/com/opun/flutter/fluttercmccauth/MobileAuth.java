@@ -46,10 +46,10 @@ public class MobileAuth {
         mBtn = bodyBtn.getCustomButton();
     }
 
-    public void initSDK(AuthThemeConfig themeConfig,boolean titleBtnHidden,boolean bodyBtnHidden) {
+    public void initSDK(AuthThemeConfig themeConfig,boolean cmccDebug,boolean useCmccSms,boolean titleBtnHidden,boolean bodyBtnHidden) {
 
-        AuthnHelper.setDebugMode(true);
-        mAuthnHelper.SMSAuthOn(true); //允许使用短信验证码
+        AuthnHelper.setDebugMode(cmccDebug);
+        mAuthnHelper.SMSAuthOn(useCmccSms); //允许使用短信验证码
         mAuthnHelper.setAuthThemeConfig(themeConfig);
 
         if(!titleBtnHidden){

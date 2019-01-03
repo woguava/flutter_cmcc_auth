@@ -153,6 +153,15 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
         customBodyBtnOffsetY = call.argument("customBodyBtnOffsetY");
       }
 
+      boolean cmccDebug = false;
+      if(null != call.argument("cmccDebug")) {
+        cmccDebug = call.argument("cmccDebug");
+      }
+      boolean useCmccSms = false;
+      if(null != call.argument("useCmccSms")) {
+        useCmccSms = call.argument("useCmccSms");
+      }
+
       mobileAuth.initDynamicButton(
               new MobileCustomButton(registrar.activeContext(),1,customTitleBtnText,customTitleBtnTextColor,customTitleBtnTextSize,0),
               new MobileCustomButton(registrar.activeContext(),2,customBodyBtnText,customBodyBtnTextColor,customBodyBtnTextSize,customBodyBtnOffsetY));
@@ -189,6 +198,8 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
                       .setSmsLogBtnTextColor(smsLogBtnTextColor)
                       .setSmsNavText(smsNavText)
                       .build(),
+              cmccDebug,
+              useCmccSms,
               customTitleBtnHidden,
               customBodyBtnHidden
       );
@@ -218,7 +229,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       String appId = call.argument("appId");
       String appkey = call.argument("appkey");
       int expiresln = 8000;
-      if(null == call.argument("expiresln")){
+      if(null != call.argument("expiresln")){
         expiresln = call.argument("expiresln");
       }
       mobileAuth.preGetphoneInfo(appId,appkey,expiresln,result);
