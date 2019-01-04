@@ -237,6 +237,10 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       String appId = call.argument("appId");
       String appkey = call.argument("appkey");
       mobileAuth.displayLogin(appId,appkey,result);
+    }else if (call.method.equals("implicitLogin")) {
+        String appId = call.argument("appId");
+        String appkey = call.argument("appkey");
+        mobileAuth.implicitLogin(appId,appkey,result);
     } else {
       result.notImplemented();
     }

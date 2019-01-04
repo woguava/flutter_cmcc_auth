@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     //initPlatformState();
-    CMCCAuthOptions opt = new CMCCAuthOptions('300011878636','180BACB00200B41796A6B3CBB1D96271',5000);
+    CMCCAuthOptions opt = new CMCCAuthOptions('300011879128','00F1B72734F6D2DC98AFA66A64A1E730',expiresln:8000);
     FlutterCmccAuth.setMobileAuthOptions(opt);
   }
 
@@ -68,27 +68,27 @@ class _MyAppState extends State<MyApp> {
                 child: Text('设置授权页面主题'),
                 onPressed: () async {
                   CMCCAuthThemeConfig themeconfig = new CMCCAuthThemeConfig(
-                      navColor : -16742704,
-                      navText : "美院登录",
+                      navColor : -108766,
+                      navText : "统一认证登录",
                       navTextColor : -1,
-                      navReturnImgPath : "return_bg",
-                      logoImgPath : "mobile_logo",
-                      logoWidth : 70,
-                      logoHeight : 70,
-                      logoOffsetY : 150,
+                      navReturnImgPath : "cmcc_return_bg",
+                      logoImgPath : 'cmcc_login_logo',
+                      logoWidth : 120,
+                      logoHeight : 80,
+                      logoOffsetY : 100,
                       logoHidden : false,
-                      numberColor : -16742704,
+                      numberColor : -108766,
                       switchAccHidden:true,
-                      switchAccTextColor : -11365671,
+                      switchAccTextColor : -1,
                       switchAccOffsetY : 300,
-                      numFieldOffsetY : 184,
-                      logBtnText : "一键登录",
+                      numFieldOffsetY : 180,
+                      logBtnText : "本机号码一键登录",
                       logBtnOffsetY : 254,
                       logBtnTextColor : -1,
-                      logBtnBackgroundPath : "umcsdk_login_btn_bg",
-                      uncheckedImgPath : "uncheck_image",
-                      checkedImgPath : "check_image",
-                      privacyOffsetY : 10,
+                      logBtnBackgroundPath : "cmcc_login_btn_bg",
+                      uncheckedImgPath : "cmcc_uncheck_image",
+                      checkedImgPath : "cmcc_check_image",
+                      privacyOffsetY : 25,
                       //clauseName,
                       //clauseUrl,
                       clauseBaseColor : -10066330,
@@ -97,18 +97,21 @@ class _MyAppState extends State<MyApp> {
                       //clauseUrlTwo,
                       sloganOffsetY : 224,
                       sloganTextColor : -10066330,
-                      smsNavText : "登录",
+                      smsNavText : "短信验证登录",
                       smsLogBtnText : "短信验证码登录",
                       smsLogBtnTextColor : -1,
-                      smsLogBtnImgPath : "umcsdk_login_btn_bg",
+                      smsLogBtnImgPath : "cmcc_login_btn_bg",
                       customTitleBtnText : "其它",
                       customTitleBtnTextColor : -1,
                       customTitleBtnTextSize : 15,
-                      customTitleBtnHidden : false,
+                      customTitleBtnHidden : true,
                       customBodyBtnText : "其它方式登录",
-                      customBodyBtnTextColor : -60338,
-                      customBodyBtnTextSize : 13,
-                      customBodyBtnHidden : false);
+                      customBodyBtnTextColor : -108766,
+                      customBodyBtnTextSize : 15,
+                      customBodyBtnHidden : false,
+                      customBodyBtnOffsetY: 300,
+                      cmccDebug: true,
+                      useCmccSms: false);
                   await FlutterCmccAuth.authThemeConfig(themeconfig);
                   setState(() {
                   });
@@ -134,9 +137,10 @@ class _MyAppState extends State<MyApp> {
             RaisedButton(
                 child: Text('mobileAuth(号码校验)'),
                 onPressed: () async {
-
+                  CMCCMobileAuthResult result = await FlutterCmccAuth.implicitLogin;
+                  print(result.toString());
                   setState(() {
-                    _restText = '';
+                    _restText = result.toString();
                   });
                 }),
             Text(_restText,

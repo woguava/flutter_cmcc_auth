@@ -20,7 +20,7 @@ import java.util.Map;
 import io.flutter.plugin.common.MethodChannel;
 
 public class MobileAuth {
-    protected String LOG_TAG = "MobileAuth";
+    private String LOG_TAG = "flutter_cmcc_auth";
 
     private final Activity g_activity;
     private MethodChannel.Result g_callback;
@@ -33,6 +33,7 @@ public class MobileAuth {
 
     private static final int CMCC_SDK_REQUEST_GET_PHONE_INFO_CODE = 11001;
     private static final int CMCC_SDK_REQUEST_LOGIN_AUTH_CODE = 11002;
+    private static final int CMCC_SDK_REQUEST_MOBILE_AUTH_CODE = 11003;
 
     private Button mTitleBtn,mBtn;
 
@@ -96,29 +97,19 @@ public class MobileAuth {
     public void getNetAndOprate(final MethodChannel.Result callback){
         JSONObject jsonObject = mAuthnHelper.getNetworkType(g_activity);
         Log.d(LOG_TAG,jsonObject.toString());
-        try {
-            if(null == jsonObject){
-                callback.error("mobile_auth","getNetworkType error!",null);
-            }else{
-                Map<String, String> resultMap = new HashMap<String,String>();
-                int operator = 0;
-                if(null != jsonObject.getString("operatorType")){
-                    operator = Integer.parseInt(jsonObject.getString("operatorType"));
-                }
-                resultMap.put("operatorType",""+operator);
-                resultMap.put("operatorName",operatorArray[operator]);
-                int net = 0;
-                if(null != jsonObject.getString("networkType")){
-                    net = Integer.parseInt(jsonObject.getString("networkType"));
-                }
-                resultMap.put("networkType",""+net);
-                resultMap.put("networkName",networkArray[net]);
 
-                callback.success(resultMap);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            callback.error("mobile_auth_netandoper",e.getMessage(),null);
+        if(null == jsonObject){
+            callback.error("mobile_auth","getNetworkType error!",null);
+        }else{
+            Map<String, String> resultMap = new HashMap<String,String>();
+            int operator = jsonObject.optInt("operatorType",0);
+            resultMap.put("operatorType",""+operator);
+            resultMap.put("operatorName",operatorArray[operator]);
+            int net = jsonObject.optInt("networkType",0);
+            resultMap.put("networkType",""+net);
+            resultMap.put("networkName",networkArray[net]);
+
+            callback.success(resultMap);
         }
     }
 
@@ -127,22 +118,18 @@ public class MobileAuth {
             @Override
             public void onGetTokenComplete(int SDKRequestCode, JSONObject jObj) {
                 if (jObj != null) {
-                    try {
-                        //时间
-                        Log.d(LOG_TAG,"SDKRequestCode: " + SDKRequestCode);//调用方式不传SDKRequestCode时，该值默认为：-1
-                        Log.d(LOG_TAG,"Result JSONObject: " + jObj.toString());
-                        if(SDKRequestCode == CMCC_SDK_REQUEST_GET_PHONE_INFO_CODE){
-                            Map<String, String> resultMap = new HashMap<String,String>();
-                            resultMap.put("resultCode",""+jObj.getInt("resultCode"));
-                            resultMap.put("desc",""+jObj.getBoolean("desc"));
-                            callback.success(resultMap);
+                    //时间
+                    Log.d(LOG_TAG,"SDKRequestCode: " + SDKRequestCode);//调用方式不传SDKRequestCode时，该值默认为：-1
+                    Log.d(LOG_TAG,"Result JSONObject: " + jObj.toString());
+                    if(SDKRequestCode == CMCC_SDK_REQUEST_GET_PHONE_INFO_CODE){
+                        Map<String, String> resultMap = new HashMap<String,String>();
+                        resultMap.put("resultCode",""+jObj.optString("resultCode"));
+                        if (jObj.has("desc")) {
+                            resultMap.put("desc", "" + jObj.optString("desc"));
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        callback.error("mobile_auth_getphone",e.getMessage(),null);
+                        callback.success(resultMap);
                     }
                 }
-
             }
         };
         mAuthnHelper.getPhoneInfo(appId, appKey, expiresIn, tokenListener, CMCC_SDK_REQUEST_GET_PHONE_INFO_CODE);
@@ -154,35 +141,65 @@ public class MobileAuth {
             @Override
             public void onGetTokenComplete(int SDKRequestCode, JSONObject jObj) {
                 if (jObj != null) {
-                    try {
-                        //时间
-                        Log.d(LOG_TAG,"SDKRequestCode: " + SDKRequestCode);//调用方式不传SDKRequestCode时，该值默认为：-1
-                        Log.d(LOG_TAG,"Result JSONObject: " + jObj.toString());
-                        if(SDKRequestCode == CMCC_SDK_REQUEST_LOGIN_AUTH_CODE){
-                            Map<String, String> resultMap = new HashMap<String,String>();
-                            int retCode = jObj.getInt("resultCode");
-                            resultMap.put("resultCode",""+jObj.getString("resultCode"));
-                            resultMap.put("authType",""+jObj.getString("authType"));
-                            resultMap.put("authTypeDes",""+jObj.getString("authTypeDes"));
-                            if(retCode == 103000) {
-                                //成功时返回：：临时凭证，token有效期2min，一次有效；
-                                resultMap.put("token", "" + jObj.getString("token"));
-                                //成功时返回：用户身份唯一标识
-                                resultMap.put("openId", "" + jObj.getString("openId"));
-                            }else{
-                                //失败时返回
-                                resultMap.put("resultDesc",""+jObj.getString("resultDesc"));
-                            }
-                            callback.success(resultMap);
+                    //时间
+                    Log.d(LOG_TAG,"SDKRequestCode: " + SDKRequestCode);//调用方式不传SDKRequestCode时，该值默认为：-1
+                    Log.d(LOG_TAG,"Result JSONObject: " + jObj.toString());
+                    if(SDKRequestCode == CMCC_SDK_REQUEST_LOGIN_AUTH_CODE){
+                        Map<String, String> resultMap = new HashMap<String,String>();
+                        resultMap.put("resultCode",""+jObj.optString("resultCode"));
+                        if (jObj.has("authType")) {
+                            resultMap.put("authType", "" + jObj.optString("authType"));
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        callback.error("mobile_auth_loginAuth",e.getMessage(),null);
+                        if (jObj.has("authTypeDes")) {
+                            resultMap.put("authTypeDes", "" + jObj.optString("authTypeDes"));
+                        }
+                        //成功时返回：：临时凭证，token有效期2min，一次有效；
+                        if (jObj.has("token")) {
+                            resultMap.put("token", "" + jObj.optString("token"));
+                        }
+                        //成功时返回：用户身份唯一标识
+                        if (jObj.has("openId")) {
+                            resultMap.put("openId", "" + jObj.optString("openId"));
+                        }
+                        //失败时返回
+                        if (jObj.has("resultDesc")) {
+                            resultMap.put("resultDesc", "" + jObj.optString("resultDesc"));
+                        }
+
+                        callback.success(resultMap);
                     }
                 }
-
             }
         };
         mAuthnHelper.loginAuth(appId, appKey, tokenListener, CMCC_SDK_REQUEST_LOGIN_AUTH_CODE);
+    }
+
+    /*本机号码校验*/
+    public void implicitLogin(String appId,String appKey,final MethodChannel.Result callback){
+        TokenListener tokenListener = new TokenListener(){
+            @Override
+            public void onGetTokenComplete(int SDKRequestCode, JSONObject jObj) {
+                if (jObj != null) {
+                    //时间
+                    Log.d(LOG_TAG,"SDKRequestCode: " + SDKRequestCode);//调用方式不传SDKRequestCode时，该值默认为：-1
+                    Log.d(LOG_TAG,"Result JSONObject: " + jObj.toString());
+                    if(SDKRequestCode == CMCC_SDK_REQUEST_MOBILE_AUTH_CODE){
+                        Map<String, String> resultMap = new HashMap<String,String>();
+                        resultMap.put("resultCode",""+jObj.optString("resultCode"));
+                        if (jObj.has("authType")) {
+                            resultMap.put("authType", "" + jObj.optString("authType"));
+                        }
+                        if (jObj.has("authTypeDes")) {
+                            resultMap.put("authTypeDes", "" + jObj.optString("authTypeDes"));
+                        }
+                        if (jObj.has("token")) {
+                            resultMap.put("token", "" + jObj.optString("token"));
+                        }
+                        callback.success(resultMap);
+                    }
+                }
+            }
+        };
+        mAuthnHelper.mobileAuth(appId, appKey, tokenListener, CMCC_SDK_REQUEST_MOBILE_AUTH_CODE);
     }
 }

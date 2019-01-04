@@ -1,15 +1,15 @@
-//认证参数
+///移动认证参数
 class CMCCAuthOptions{
-  //appid
+  ///appid
   String _appid;
 
-  //appkey
+  ///appkey
   String _appkey;
 
-  //超时时间
+  ///超时时间
   int _expiresln;
 
-  CMCCAuthOptions(String appid,String appkey,int expiresln){
+  CMCCAuthOptions(String appid,String appkey,{int expiresln:8000}){
     this._appid = appid;
     this._appkey = appkey;
     this._expiresln = expiresln;

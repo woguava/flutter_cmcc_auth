@@ -11,14 +11,14 @@ class FlutterCmccAuth {
       const MethodChannel('flutter_cmcc_auth');
 
   static CMCCAuthOptions _options;
-  static bool  _options_init = false;
+  static bool  _optionsInit = false;
 
   static const List<String> operatorArray = ['未知','移动','联通','电信'];
   static const List<String> networkArray = ["未知","数据流量","纯WiFi","流量+WiFi"];
 
   static void setMobileAuthOptions(final CMCCAuthOptions opt){
     _options = opt;
-    _options_init = true;
+    _optionsInit = true;
   }
 
   static Future<String> get platformVersion async {
@@ -30,11 +30,10 @@ class FlutterCmccAuth {
     await _channel.invokeMethod('mobileAuthThemeConfig',themeconfig.toJson());
   }
 
-  /**
-   * 需要权限：READ_PHONE_STATE， ACCESS_NETWORK_STATE
-   * operatortype获取网络运营商: 0.未知 1.移动流量 2.联通流量网络 3.电信流量网络
-   * networktype 网络状态：0未知；1流量 2 wifi；3 数据流量+wifi
-   */
+
+   /// 需要权限：READ_PHONE_STATE， ACCESS_NETWORK_STATE
+   /// operatortype获取网络运营商: 0.未知 1.移动流量 2.联通流量网络 3.电信流量网络
+   /// networktype 网络状态：0未知；1流量 2 wifi；3 数据流量+wifi
   static Future<CMCCMobileAuthResult> get networdAndOperator async {
     try{
 
@@ -52,11 +51,9 @@ class FlutterCmccAuth {
     }
   }
 
-  /**
-   * 预取号
-   */
+  ///预取号
   static Future<CMCCMobileAuthResult> get preGetphoneInfo async {
-    if(!_options_init){
+    if(!_optionsInit){
       final CMCCMobileAuthResult result = new CMCCMobileAuthResult();
       result.setProcResult(-1, "未初始化[ setMobileAuthOptions ]");
       return result;
@@ -84,11 +81,9 @@ class FlutterCmccAuth {
     }
   }
 
-  /**
-   * 显示一键登录
-   */
+  ///显示一键登录
   static Future<CMCCMobileAuthResult> get displayLogin async {
-    if(!_options_init){
+    if(!_optionsInit){
       final CMCCMobileAuthResult result = new CMCCMobileAuthResult();
       result.setProcResult(-1, "未初始化[ setMobileAuthOptions ]");
       return result;
@@ -117,5 +112,35 @@ class FlutterCmccAuth {
       result.setProcResult(-1,e.toString());
       return result;
     }
+  }
+
+  ///本机号码验证
+  static Future<CMCCMobileAuthResult> get implicitLogin async{
+    if(!_optionsInit){
+      final CMCCMobileAuthResult result = new CMCCMobileAuthResult();
+      result.setProcResult(-1, "未初始化[ setMobileAuthOptions ]");
+      return result;
+    }
+
+    try{
+      var res =  await _channel.invokeMethod('implicitLogin',<String, dynamic>{
+        'appId': _options.appid,
+        'appkey': _options.appkey
+      });
+
+      CMCCMobileAuthResult result = new CMCCMobileAuthResult();
+      if( res['resultCode'] == "103000"){
+        result.setProcResult(0, "成功",data:res);
+      }else{
+        result.setProcResult(-1, "失败",data:res);
+      }
+      return result;
+    } on PlatformException catch (e) {
+      print(e);
+      CMCCMobileAuthResult result = new CMCCMobileAuthResult();
+      result.setProcResult(-1,e.toString());
+      return result;
+    }
+
   }
 }

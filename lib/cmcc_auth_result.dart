@@ -1,21 +1,12 @@
-/**
- * 返回认证结果
- */
+///移动认证返回
 class  CMCCMobileAuthResult{
-  /**
-   * 返回码:
-   *  (0 成功 -1 失败)
-   */
+  ///返回码：(0 成功 -1 失败 -2 用户取消)
   int retCode;
 
-  /**
-   * 错误原因
-   */
+  ///错误原因
   String retMsg;
 
-  /**
-   * 具体数据
-   */
+  //具体接口返回数据
   dynamic data;
 
   void setProcResult(int retCode,String retMsg,{dynamic data}){
