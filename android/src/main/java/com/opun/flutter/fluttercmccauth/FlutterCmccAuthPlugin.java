@@ -27,6 +27,21 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
     channel.setMethodCallHandler(new FlutterCmccAuthPlugin(registrar));
   }
 
+  private boolean initPlugin(MethodCall call, Result result){
+    if (call.method.equals("mobileRegister")) {
+      String appId = call.argument("appId");
+      String appkey = call.argument("appkey");
+      int expiresln = 8000;
+      if(null != call.argument("expiresln")){
+        expiresln = call.argument("expiresln");
+      }
+      mobileAuth.initSDK(appId,appkey,expiresln);
+      result.success("sucess");
+      return  true;
+    }
+    return false;
+  }
+
   private boolean setMobileAuthThemeConfig(MethodCall call, Result result){
     if (call.method.equals("mobileAuthThemeConfig")) {
       int navColor = -1;
@@ -166,7 +181,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
               new MobileCustomButton(registrar.activeContext(),1,customTitleBtnText,customTitleBtnTextColor,customTitleBtnTextSize,0),
               new MobileCustomButton(registrar.activeContext(),2,customBodyBtnText,customBodyBtnTextColor,customBodyBtnTextSize,customBodyBtnOffsetY));
 
-      mobileAuth.initSDK(new AuthThemeConfig.Builder()
+      mobileAuth.initWindowSytle(new AuthThemeConfig.Builder()
                       .setNavColor(navColor)
                       .setNavText(navText)
                       .setNavTextColor(navTextColor)
@@ -211,6 +226,9 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
 
   @Override
   public void onMethodCall(MethodCall call, Result result) {
+    if(initPlugin(call,result)){
+      return;
+    }
     if(setMobileAuthThemeConfig(call,result)){
       return;
     }
@@ -221,26 +239,14 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       return;
     }
 
-    if (call.method.equals("getPlatformVersion")) {
-      result.success("Android " + android.os.Build.VERSION.RELEASE);
-    } else if (call.method.equals("networdAndOperator")) {
+    if (call.method.equals("networdAndOperator")) {
       mobileAuth.getNetAndOprate(result);
     }else if (call.method.equals("preGetphoneInfo")) {
-      String appId = call.argument("appId");
-      String appkey = call.argument("appkey");
-      int expiresln = 8000;
-      if(null != call.argument("expiresln")){
-        expiresln = call.argument("expiresln");
-      }
-      mobileAuth.preGetphoneInfo(appId,appkey,expiresln,result);
+      mobileAuth.preGetphoneInfo(result);
     }else if (call.method.equals("displayLogin")) {
-      String appId = call.argument("appId");
-      String appkey = call.argument("appkey");
-      mobileAuth.displayLogin(appId,appkey,result);
+      mobileAuth.displayLogin(result);
     }else if (call.method.equals("implicitLogin")) {
-        String appId = call.argument("appId");
-        String appkey = call.argument("appkey");
-        mobileAuth.implicitLogin(appId,appkey,result);
+        mobileAuth.implicitLogin(result);
     } else {
       result.notImplemented();
     }

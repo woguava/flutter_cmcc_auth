@@ -15,7 +15,7 @@ A mobile auth Flutter plugin.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-
-  s.ios.deployment_target = '8.0'
+  s.ios.vendored_frameworks = 'TYRZSDK.framework'
+  s.ios.resource_bundles = {'TYRZResource' => ['TYRZResource.bundle/*.png'] }
+  s.ios.deployment_target = '9.0'
 end
-

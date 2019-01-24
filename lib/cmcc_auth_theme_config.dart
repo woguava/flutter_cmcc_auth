@@ -22,6 +22,9 @@ class CMCCAuthThemeConfig{
   int logBtnOffsetY;
   int logBtnTextColor;
   String logBtnBackgroundPath;
+  String logBtnImgNormal;
+  String logBtnImgInvalied;
+  String logBtnImgHighted;
   String uncheckedImgPath;
   String checkedImgPath;
   int privacyOffsetY;
@@ -37,6 +40,9 @@ class CMCCAuthThemeConfig{
   String smsLogBtnText;
   int smsLogBtnTextColor;
   String smsLogBtnImgPath;
+  String smsLogBtnImgNormal;
+  String smsLogBtnImgInvalied;
+  String smsLogBtnImgHighted;
   String customTitleBtnText;
   int customTitleBtnTextColor;
   int customTitleBtnTextSize;
@@ -68,6 +74,9 @@ class CMCCAuthThemeConfig{
     int logBtnOffsetY : 254,
     int logBtnTextColor : -1,
     String logBtnBackgroundPath : "cmcc_login_btn_bg",
+    String logBtnImgNormal : "cmcc_login_btn_normal",
+    String logBtnImgInvalied : "cmcc_login_btn_unable",
+    String logBtnImgHighted : "cmcc_login_btn_press",
     String uncheckedImgPath : "cmcc_uncheck_image",
     String checkedImgPath : "cmcc_check_image",
     int privacyOffsetY : 30,
@@ -83,6 +92,9 @@ class CMCCAuthThemeConfig{
     String smsLogBtnText : "短信验证码登录",
     int smsLogBtnTextColor : -1,
     String smsLogBtnImgPath : "cmcc_login_btn_bg",
+    String smsLogBtnImgNormal : "cmcc_login_btn_normal",
+    String smsLogBtnImgInvalied : "cmcc_login_btn_unable",
+    String smsLogBtnImgHighted : "cmcc_login_btn_press",
     String customTitleBtnText : "其它",
     int customTitleBtnTextColor : -1,
     int customTitleBtnTextSize : 15,
@@ -113,6 +125,9 @@ class CMCCAuthThemeConfig{
     this.logBtnOffsetY=         logBtnOffsetY;
     this.logBtnTextColor=       logBtnTextColor;
     this.logBtnBackgroundPath=  logBtnBackgroundPath;
+    this.logBtnImgNormal=       logBtnImgNormal;
+    this.logBtnImgInvalied=     logBtnImgInvalied;
+    this.logBtnImgHighted=      logBtnImgHighted;
     this.uncheckedImgPath=      uncheckedImgPath;
     this.checkedImgPath=        checkedImgPath;
     this.privacyOffsetY=        privacyOffsetY;
@@ -128,6 +143,9 @@ class CMCCAuthThemeConfig{
     this.smsLogBtnText=         smsLogBtnText;
     this.smsLogBtnTextColor=    smsLogBtnTextColor;
     this.smsLogBtnImgPath  =     smsLogBtnImgPath;
+    this.smsLogBtnImgNormal  =     smsLogBtnImgNormal;
+    this.smsLogBtnImgInvalied  =     smsLogBtnImgInvalied;
+    this.smsLogBtnImgHighted  =     smsLogBtnImgHighted;
     this.customTitleBtnText = customTitleBtnText;
     this.customTitleBtnTextColor = customTitleBtnTextColor;
     this.customTitleBtnTextSize = customTitleBtnTextSize;

@@ -12,6 +12,7 @@ class FlutterCmccAuth {
 
   static CMCCAuthOptions _options;
   static bool  _optionsInit = false;
+  static bool  _registerInit = false;
 
   static const List<String> operatorArray = ['未知','移动','联通','电信'];
   static const List<String> networkArray = ["未知","数据流量","纯WiFi","流量+WiFi"];
@@ -21,9 +22,20 @@ class FlutterCmccAuth {
     _optionsInit = true;
   }
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+  ///注册服务
+  static Future<void> get mobileRegister async {
+    if(!_optionsInit){
+      print("[setMobileAuthOptions] 未初始化！");
+      return;
+    }
+    print('mobile register begin...');
+    await _channel.invokeMethod('mobileRegister',<String, dynamic>{
+        'appId': _options.appid,
+        'appkey': _options.appkey,
+        'expiresln':_options.expiresln
+      });
+    print('mobile register end...');
+    _registerInit = true;
   }
 
   static Future<void> authThemeConfig(CMCCAuthThemeConfig themeconfig) async {
@@ -53,18 +65,14 @@ class FlutterCmccAuth {
 
   ///预取号
   static Future<CMCCMobileAuthResult> get preGetphoneInfo async {
-    if(!_optionsInit){
+    if(!_registerInit){
       final CMCCMobileAuthResult result = new CMCCMobileAuthResult();
-      result.setProcResult(-1, "未初始化[ setMobileAuthOptions ]");
+      result.setProcResult(-1, "未初始化[ mobileRegister ]");
       return result;
     }
 
     try{
-      var res =  await _channel.invokeMethod('preGetphoneInfo',<String, dynamic>{
-        'appId': _options.appid,
-        'appkey': _options.appkey,
-        'expiresln':_options.expiresln
-      });
+      var res =  await _channel.invokeMethod('preGetphoneInfo');
 
       CMCCMobileAuthResult result = new CMCCMobileAuthResult();
       if( res['resultCode'] == "103000"){
@@ -83,17 +91,14 @@ class FlutterCmccAuth {
 
   ///显示一键登录
   static Future<CMCCMobileAuthResult> get displayLogin async {
-    if(!_optionsInit){
+    if(!_registerInit){
       final CMCCMobileAuthResult result = new CMCCMobileAuthResult();
-      result.setProcResult(-1, "未初始化[ setMobileAuthOptions ]");
+      result.setProcResult(-1, "未初始化[ mobileRegister ]");
       return result;
     }
 
     try{
-      var res =  await _channel.invokeMethod('displayLogin',<String, dynamic>{
-        'appId': _options.appid,
-        'appkey': _options.appkey
-      });
+      var res =  await _channel.invokeMethod('displayLogin');
 
       CMCCMobileAuthResult result = new CMCCMobileAuthResult();
       if( res['resultCode'] == "103000"){
@@ -116,17 +121,14 @@ class FlutterCmccAuth {
 
   ///本机号码验证
   static Future<CMCCMobileAuthResult> get implicitLogin async{
-    if(!_optionsInit){
+    if(!_registerInit){
       final CMCCMobileAuthResult result = new CMCCMobileAuthResult();
-      result.setProcResult(-1, "未初始化[ setMobileAuthOptions ]");
+      result.setProcResult(-1, "未初始化[ mobileRegister ]");
       return result;
     }
 
     try{
-      var res =  await _channel.invokeMethod('implicitLogin',<String, dynamic>{
-        'appId': _options.appid,
-        'appkey': _options.appkey
-      });
+      var res =  await _channel.invokeMethod('implicitLogin');
 
       CMCCMobileAuthResult result = new CMCCMobileAuthResult();
       if( res['resultCode'] == "103000"){

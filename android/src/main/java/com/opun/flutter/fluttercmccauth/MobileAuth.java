@@ -22,11 +22,11 @@ import io.flutter.plugin.common.MethodChannel;
 public class MobileAuth {
     private String LOG_TAG = "flutter_cmcc_auth";
 
-    private final Activity g_activity;
-    private MethodChannel.Result g_callback;
+    private final Activity flutter_activity;
+    private MethodChannel.Result flutter_result;
     private AuthnHelper mAuthnHelper;
 
-    public String mResultString;
+    //public String mResultString;
 
     private String[] operatorArray = {"未知","移动","联通","电信"};
     private String[] networkArray = {"未知","数据流量","纯WiFi","流量+WiFi"};
@@ -37,9 +37,19 @@ public class MobileAuth {
 
     private Button mTitleBtn,mBtn;
 
+    private String cmccAppId;
+    private String cmccAppKey;
+    private long cmccTimeout;
+
     public MobileAuth(Activity activity){
-        this.g_activity = activity;
-        mAuthnHelper = AuthnHelper.getInstance(g_activity.getApplicationContext());
+        this.flutter_activity = activity;
+        mAuthnHelper = AuthnHelper.getInstance(flutter_activity.getApplicationContext());
+    }
+
+    public void initSDK(String appId,String appKey,long expiresIn){
+        this.cmccAppId = appId;
+        this.cmccAppKey = appKey;
+        this.cmccTimeout = expiresIn;
     }
 
     public void initDynamicButton(MobileCustomButton titleBtn,MobileCustomButton bodyBtn){
@@ -47,7 +57,7 @@ public class MobileAuth {
         mBtn = bodyBtn.getCustomButton();
     }
 
-    public void initSDK(AuthThemeConfig themeConfig,boolean cmccDebug,boolean useCmccSms,boolean titleBtnHidden,boolean bodyBtnHidden) {
+    public void initWindowSytle(AuthThemeConfig themeConfig,boolean cmccDebug,boolean useCmccSms,boolean titleBtnHidden,boolean bodyBtnHidden) {
 
         AuthnHelper.setDebugMode(cmccDebug);
         mAuthnHelper.SMSAuthOn(useCmccSms); //允许使用短信验证码
@@ -64,7 +74,7 @@ public class MobileAuth {
                             Map<String, String> resultMap = new HashMap<String,String>();
                             resultMap.put("resultCode","000000");
                             resultMap.put("btnType",""+MobileCustomButton.TITLE_BTN);
-                            g_callback.success(resultMap);
+                            flutter_result.success(resultMap);
                         }
                     })
                     .build()
@@ -81,7 +91,7 @@ public class MobileAuth {
                             Map<String, String> resultMap = new HashMap<String,String>();
                             resultMap.put("resultCode","000000");
                             resultMap.put("btnType",""+MobileCustomButton.BODY_BTN);
-                            g_callback.success(resultMap);
+                            flutter_result.success(resultMap);
                         }
                     })
                     .build()
@@ -94,12 +104,12 @@ public class MobileAuth {
      * operatortype获取网络运营商: 0.未知 1.移动流量 2.联通流量网络 3.电信流量网络
      * networktype 网络状态：0未知；1流量 2 wifi；3 数据流量+wifi
      */
-    public void getNetAndOprate(final MethodChannel.Result callback){
-        JSONObject jsonObject = mAuthnHelper.getNetworkType(g_activity);
+    public void getNetAndOprate(final MethodChannel.Result result){
+        JSONObject jsonObject = mAuthnHelper.getNetworkType(flutter_activity);
         Log.d(LOG_TAG,jsonObject.toString());
 
         if(null == jsonObject){
-            callback.error("mobile_auth","getNetworkType error!",null);
+            result.error("mobile_auth","getNetworkType error!",null);
         }else{
             Map<String, String> resultMap = new HashMap<String,String>();
             int operator = jsonObject.optInt("operatorType",0);
@@ -109,11 +119,11 @@ public class MobileAuth {
             resultMap.put("networkType",""+net);
             resultMap.put("networkName",networkArray[net]);
 
-            callback.success(resultMap);
+            result.success(resultMap);
         }
     }
 
-    public void preGetphoneInfo(String appId,String appKey,long expiresIn,final MethodChannel.Result callback){
+    public void preGetphoneInfo(final MethodChannel.Result result){
         TokenListener tokenListener = new TokenListener(){
             @Override
             public void onGetTokenComplete(int SDKRequestCode, JSONObject jObj) {
@@ -127,16 +137,16 @@ public class MobileAuth {
                         if (jObj.has("desc")) {
                             resultMap.put("desc", "" + jObj.optString("desc"));
                         }
-                        callback.success(resultMap);
+                        result.success(resultMap);
                     }
                 }
             }
         };
-        mAuthnHelper.getPhoneInfo(appId, appKey, expiresIn, tokenListener, CMCC_SDK_REQUEST_GET_PHONE_INFO_CODE);
+        mAuthnHelper.getPhoneInfo(this.cmccAppId, this.cmccAppKey, this.cmccTimeout, tokenListener, CMCC_SDK_REQUEST_GET_PHONE_INFO_CODE);
     }
 
-    public void displayLogin(String appId,String appKey,final MethodChannel.Result callback){
-        g_callback = callback;
+    public void displayLogin(final MethodChannel.Result result){
+        flutter_result = result;
         TokenListener tokenListener = new TokenListener(){
             @Override
             public void onGetTokenComplete(int SDKRequestCode, JSONObject jObj) {
@@ -166,16 +176,16 @@ public class MobileAuth {
                             resultMap.put("resultDesc", "" + jObj.optString("resultDesc"));
                         }
 
-                        callback.success(resultMap);
+                        result.success(resultMap);
                     }
                 }
             }
         };
-        mAuthnHelper.loginAuth(appId, appKey, tokenListener, CMCC_SDK_REQUEST_LOGIN_AUTH_CODE);
+        mAuthnHelper.loginAuth(this.cmccAppId, this.cmccAppKey, tokenListener, CMCC_SDK_REQUEST_LOGIN_AUTH_CODE);
     }
 
     /*本机号码校验*/
-    public void implicitLogin(String appId,String appKey,final MethodChannel.Result callback){
+    public void implicitLogin(final MethodChannel.Result result){
         TokenListener tokenListener = new TokenListener(){
             @Override
             public void onGetTokenComplete(int SDKRequestCode, JSONObject jObj) {
@@ -195,11 +205,11 @@ public class MobileAuth {
                         if (jObj.has("token")) {
                             resultMap.put("token", "" + jObj.optString("token"));
                         }
-                        callback.success(resultMap);
+                        result.success(resultMap);
                     }
                 }
             }
         };
-        mAuthnHelper.mobileAuth(appId, appKey, tokenListener, CMCC_SDK_REQUEST_MOBILE_AUTH_CODE);
+        mAuthnHelper.mobileAuth(this.cmccAppId, this.cmccAppKey, tokenListener, CMCC_SDK_REQUEST_MOBILE_AUTH_CODE);
     }
 }

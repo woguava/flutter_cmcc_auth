@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
+import android.graphics.Point;
 
 import java.lang.reflect.Method;
 
@@ -85,7 +86,10 @@ public class MobileParmUtil {
             Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
             method.invoke(display, dm);
             if (windowManager != null) {
-                vh = dm.heightPixels - windowManager.getDefaultDisplay().getHeight();
+                display = windowManager.getDefaultDisplay();
+                Point outsize = new Point();
+                display.getSize(outsize);
+                vh = dm.heightPixels - outsize.y;
             }
         } catch (Exception e) {
             e.printStackTrace();

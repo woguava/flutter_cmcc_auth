@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_cmcc_auth/flutter_cmcc_auth.dart';
 import 'package:flutter_cmcc_auth/cmcc_auth_options.dart';
 import 'package:flutter_cmcc_auth/cmcc_auth_result.dart';
 import 'package:flutter_cmcc_auth/cmcc_auth_theme_config.dart';
+import 'dart:io';
 
 void main() => runApp(MyApp());
 
@@ -15,35 +15,32 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   String _restText = '返回结果：';
+
+  String _cmccAppId;
+  String _cmccAppKey;
+  int _cmccTimeout;
 
   @override
   void initState() {
     super.initState();
-    //initPlatformState();
-    CMCCAuthOptions opt = new CMCCAuthOptions('300011879128','00F1B72734F6D2DC98AFA66A64A1E730',expiresln:8000);
-    FlutterCmccAuth.setMobileAuthOptions(opt);
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await FlutterCmccAuth.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+    if(Platform.isIOS){
+      _cmccAppId = '300011880083';
+      _cmccAppKey = '9DC5CE24E4AAD5603CE62F7D927BBFCC';
+    }else if(Platform.isAndroid){
+      _cmccAppId = '300011880217';
+      _cmccAppKey = 'EC8135B461F93A0160ADF31F9AE111EF';
     }
+    _cmccTimeout = 8000;
+    CMCCAuthOptions opt = new CMCCAuthOptions(_cmccAppId,_cmccAppKey,expiresln:_cmccTimeout);
+    FlutterCmccAuth.setMobileAuthOptions(opt);
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+    initCMCCSDK();
+  }
+  
 
-    setState(() {
-      _platformVersion = platformVersion;
-    });
+  Future<void> initCMCCSDK() async {
+    await FlutterCmccAuth.mobileRegister;
   }
 
   @override
@@ -78,8 +75,8 @@ class _MyAppState extends State<MyApp> {
                       logoOffsetY : 100,
                       logoHidden : false,
                       numberColor : -108766,
-                      switchAccHidden:true,
-                      switchAccTextColor : -1,
+                      switchAccHidden:false,
+                      switchAccTextColor : -108766,
                       switchAccOffsetY : 300,
                       numFieldOffsetY : 180,
                       logBtnText : "本机号码一键登录",
@@ -89,12 +86,12 @@ class _MyAppState extends State<MyApp> {
                       uncheckedImgPath : "cmcc_uncheck_image",
                       checkedImgPath : "cmcc_check_image",
                       privacyOffsetY : 25,
-                      //clauseName,
-                      //clauseUrl,
+                      clauseName : '应用自定义服务条款一',
+                      clauseUrl : 'http://www.baidu.com',
                       clauseBaseColor : -10066330,
                       clauseColor : -16007674,
-                      //clauseNameTwo,
-                      //clauseUrlTwo,
+                      clauseNameTwo : '应用自定义服务条款二',
+                      clauseUrlTwo : 'http://www.sina.com',
                       sloganOffsetY : 224,
                       sloganTextColor : -10066330,
                       smsNavText : "短信验证登录",
@@ -104,13 +101,13 @@ class _MyAppState extends State<MyApp> {
                       customTitleBtnText : "其它",
                       customTitleBtnTextColor : -1,
                       customTitleBtnTextSize : 15,
-                      customTitleBtnHidden : true,
+                      customTitleBtnHidden : false,
                       customBodyBtnText : "其它方式登录",
                       customBodyBtnTextColor : -108766,
                       customBodyBtnTextSize : 15,
                       customBodyBtnHidden : false,
-                      customBodyBtnOffsetY: 300,
-                      cmccDebug: true,
+                      customBodyBtnOffsetY: 320,
+                      cmccDebug: false,
                       useCmccSms: false);
                   await FlutterCmccAuth.authThemeConfig(themeconfig);
                   setState(() {
