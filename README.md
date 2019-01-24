@@ -1,14 +1,13 @@
-## flutter_cmcc_auth
+#  移动认证 一键登录 本地号码验证 Flutter 插件( flutter_cmcc_auth )
 
-## 移动认证 一键登录 本地号码验证的 Flutter plugin.
+## 插件地址  
+   https://github.com/woguava/flutter_cmcc_auth.git 
+## 支持平台 
+   Android and iOS.
 
-## 插件地址 [ https://github.com/woguava/flutter_cmcc_auth.git ]
-## 支持 Android and iOS.
-
-## Examples
-
-## 在flutter的  main.dart  中设置移动认证相关参数，并进行注册
-
+## 使用说明
+### 1.在flutter的  main.dart  中设置移动认证相关参数，并进行注册
+```dart
   void initState() {
     super.initState();
     if(Platform.isIOS){
@@ -21,16 +20,15 @@
     _cmccTimeout = 8000;
     CMCCAuthOptions opt = new CMCCAuthOptions(_cmccAppId,_cmccAppKey,expiresln:_cmccTimeout);
     FlutterCmccAuth.setMobileAuthOptions(opt);
-
     initCMCCSDK();
   }
 
   Future<void> initCMCCSDK() async {
     await FlutterCmccAuth.mobileRegister;
   }
-
-##设置授权页面主题
-
+```
+### 2.设置授权页面主题
+```dart
   CMCCAuthThemeConfig themeconfig = new CMCCAuthThemeConfig(
                       navColor : -108766,
                       navText : "统一认证登录",
@@ -77,15 +75,15 @@
                       cmccDebug: false,
                       useCmccSms: false);
    await FlutterCmccAuth.authThemeConfig(themeconfig);
-
-   # *** 设置授权页面主题 Android 说明 ***
+```
+#### *** 设置授权页面主题 Android 说明 ***
    需要在 Android 项目下 res/drawable 中添加相关的 png 图片资源
    图片资源的名称与配置对应，如上面的显示logo配置
          logoImgPath : 'cmcc_login_logo',
    对应  
          res/drawable/cmcc_login_logo.png
 
-   # *** 设置授权页面主题 IOS 说明 ***
+#### *** 设置授权页面主题 IOS 说明 ***
    需要在 ios 项目下 Assets.xcassets 中添加相关的 png 图片资源
    图片资源的名称与配置对应，如上面的显示logo配置
          logoImgPath : 'cmcc_login_logo',
@@ -93,12 +91,15 @@
          Assets.xcassets/cmcc_login_logo.imageset/cmcc_login_logo.png 
          Assets.xcassets/cmcc_login_logo.imageset/Contents.json
 
-   ##预取号
+### 预取号
+```dart
    CMCCMobileAuthResult result = await FlutterCmccAuth.preGetphoneInfo;
-
-   ##授权登录
+```
+### 授权登录
+```dart
    CMCCMobileAuthResult result = await FlutterCmccAuth.displayLogin;
-
-   ##号码校验
+```
+### 号码校验
+```dart
    CMCCMobileAuthResult result = await FlutterCmccAuth.implicitLogin;
-
+```
