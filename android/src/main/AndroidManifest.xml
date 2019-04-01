@@ -11,14 +11,14 @@
         <activity
             android:name="com.cmic.sso.sdk.activity.OAuthActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="unspecified"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
         <activity
             android:name="com.cmic.sso.sdk.activity.LoginAuthActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"
+            android:screenOrientation="unspecified"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
         </activity>
