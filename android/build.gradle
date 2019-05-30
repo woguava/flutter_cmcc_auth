@@ -60,5 +60,4 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar','*.aar'], dir: 'libs')
     api 'androidx.legacy:legacy-support-v4:1.0.0'
-    //implementation files('libs/quick_login_android_5.6.5.aar')
 }
