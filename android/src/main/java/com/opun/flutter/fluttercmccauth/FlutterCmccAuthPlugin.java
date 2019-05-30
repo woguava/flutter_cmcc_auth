@@ -43,17 +43,25 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
   }
 
   private boolean setMobileAuthThemeConfig(MethodCall call, Result result){
-    if (call.method.equals("mobileAuthThemeConfig")) {
-      int navColor = -1;
+    if (call.method.equals("displayLogin")) {
+      ///授权页导航栏
+      Long navColor = -1L;
       if(null != call.argument("navColor")){
         navColor = call.argument("navColor");
       }
       String navText = call.argument("navText");
-      int navTextColor = -1;
+      Long navTextColor = -1L;
       if(null != call.argument("navTextColor")){
         navTextColor = call.argument("navTextColor");
       }
       String navReturnImgPath = call.argument("navReturnImgPath");
+      boolean authNavTransparent = false;
+      if(null != call.argument("authNavTransparent")) {
+        authNavTransparent = call.argument("authNavTransparent");
+      }
+      ///授权页背景
+      String authBGImgPath = call.argument("authBGImgPath");
+      ///授权页logo
       String logoImgPath = call.argument("logoImgPath");
       int logoWidth = 70;
       if(null != call.argument("logoWidth")){
@@ -67,76 +75,135 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       if(null != call.argument("logoOffsetY")){
         logoOffsetY = call.argument("logoOffsetY");
       }
+      int logoOffsetY_B = 0;
+      if(null != call.argument("logoOffsetY_B")){
+        logoOffsetY_B = call.argument("logoOffsetY_B");
+      }
       boolean logoHidden = false;
       if(null != call.argument("logoHidden")) {
         logoHidden = call.argument("logoHidden");
       }
-      int numberColor = -1;
+      ///授权页号码栏
+      Long numberColor = -1L;
       if(null != call.argument("numberColor")) {
         numberColor = call.argument("numberColor");
       }
-      boolean switchAccHidden = false;
-      if(null != call.argument("switchAccHidden")) {
-        switchAccHidden = call.argument("switchAccHidden");
-      }
-      int switchAccTextColor = -1;
-      if(null != call.argument("switchAccTextColor")) {
-        switchAccTextColor = call.argument("switchAccTextColor");
-      }
-      int switchAccOffsetY = 300;
-      if(null != call.argument("switchAccOffsetY")){
-        switchAccOffsetY = call.argument("switchAccOffsetY");
+      int numberSize = 18;
+      if(null != call.argument("numberSize")) {
+        numberSize = call.argument("numberSize");
       }
       int numFieldOffsetY = 184;
       if(null != call.argument("numFieldOffsetY")){
         numFieldOffsetY = call.argument("numFieldOffsetY");
       }
+      int numFieldOffsetY_B = 0;
+      if(null != call.argument("numFieldOffsetY_B")){
+        numFieldOffsetY_B = call.argument("numFieldOffsetY_B");
+      }
+
+      ///授权页登录按钮
       String logBtnText = call.argument("logBtnText");
+      Long logBtnTextColor = -1L;
+      if(null != call.argument("logBtnTextColor")) {
+        logBtnTextColor = call.argument("logBtnTextColor");
+      }
+      String logBtnImgPath = call.argument("logBtnImgPath");
       int logBtnOffsetY = 254;
       if(null != call.argument("logBtnOffsetY")) {
         logBtnOffsetY = call.argument("logBtnOffsetY");
       }
-      int logBtnTextColor = -1;
-      if(null != call.argument("logBtnTextColor")) {
-        logBtnTextColor = call.argument("logBtnTextColor");
+      int logBtnOffsetY_B = 0;
+      if(null != call.argument("logBtnOffsetY_B")) {
+        logBtnOffsetY_B = call.argument("logBtnOffsetY_B");
       }
-      String logBtnBackgroundPath = call.argument("logBtnBackgroundPath");
+
+      ///切换账号
+      boolean switchAccHidden = false;
+      if(null != call.argument("switchAccHidden")) {
+        switchAccHidden = call.argument("switchAccHidden");
+      }
+      Long switchAccTextColor = -1L;
+      if(null != call.argument("switchAccTextColor")) {
+        switchAccTextColor = call.argument("switchAccTextColor");
+      }
+      int switchOffsetY = 300;
+      if(null != call.argument("switchOffsetY")){
+        switchOffsetY = call.argument("switchOffsetY");
+      }
+      int switchOffsetY_B = 0;
+      if(null != call.argument("switchOffsetY_B")){
+        switchOffsetY_B = call.argument("switchOffsetY_B");
+      }
+
+      ///授权页隐私栏
+      String clauseOneName = call.argument("clauseOneName");
+      String clauseOneUrl = call.argument("clauseOneUrl");
+      String clauseTwoName = call.argument("clauseTwoName");
+      String clauseTwoUrl = call.argument("clauseTwoUrl");
+      Long clauseColorBase = -10066330L;
+      if(null != call.argument("clauseColorBase")) {
+        clauseColorBase = call.argument("clauseColorBase");
+      }
+      Long clauseColorAgree = -16007674L;
+      if (null != call.argument("clauseColorAgree")) {
+        clauseColorAgree = call.argument("clauseColorAgree");
+      }
       String uncheckedImgPath = call.argument("uncheckedImgPath");
       String checkedImgPath = call.argument("checkedImgPath");
-      int privacyOffsetY = 30;
+      int privacyOffsetY = 0;
       if(null != call.argument("privacyOffsetY")) {
         privacyOffsetY = call.argument("privacyOffsetY");
       }
-      String clauseName = call.argument("clauseName");
-      String clauseUrl = call.argument("clauseUrl");
-      int clauseBaseColor = -10066330;
-      if(null != call.argument("clauseBaseColor")) {
-        clauseBaseColor = call.argument("clauseBaseColor");
+      int privacyOffsetY_B = 30;
+      if(null != call.argument("privacyOffsetY_B")) {
+        privacyOffsetY_B = call.argument("privacyOffsetY_B");
       }
-      int clauseColor = -16007674;
-      if (null != call.argument("clauseColor")) {
-        clauseColor = call.argument("clauseColor");
+      boolean privacyState = false;
+      if(null != call.argument("privacyState")) {
+        privacyState = call.argument("privacyState");
       }
-      String clauseNameTwo = call.argument("clauseNameTwo");
-      String clauseUrlTwo = call.argument("clauseUrlTwo");
+
+
+      ///授权页slogan
+      Long sloganTextColor = -16007674L;
+      if(null != call.argument("sloganTextColor")) {
+        sloganTextColor = call.argument("sloganTextColor");
+      }
       int sloganOffsetY = 224;
       if (null != call.argument("sloganOffsetY")) {
         sloganOffsetY = call.argument("sloganOffsetY");
       }
-      int sloganTextColor = -16007674;
-      if(null != call.argument("sloganTextColor")) {
-        sloganTextColor = call.argument("sloganTextColor");
+      int sloganOffsetY_B = 0;
+      if (null != call.argument("sloganOffsetY_B")) {
+        sloganOffsetY_B = call.argument("sloganOffsetY_B");
+      }
+
+      ///短验页
+      boolean smsNavTransparent = false;
+      if(null != call.argument("smsNavTransparent")) {
+        smsNavTransparent = call.argument("smsNavTransparent");
       }
       String smsNavText = call.argument("smsNavText");
       String smsLogBtnText = call.argument("smsLogBtnText");
-      int smsLogBtnTextColor = -1;
+      Long smsLogBtnTextColor = -1L;
       if(null != call.argument("smsLogBtnTextColor")) {
         smsLogBtnTextColor = call.argument("smsLogBtnTextColor");
       }
       String smsLogBtnImgPath = call.argument("smsLogBtnImgPath");
+      String smsBGImgPath = call.argument("smsBGImgPath");
+      String smsCodeImgPath = call.argument("smsCodeImgPath");
+      Long smsCodeBtnTextColor = -1L;
+      if(null != call.argument("smsCodeBtnTextColor")) {
+        smsCodeBtnTextColor = call.argument("smsCodeBtnTextColor");
+      }
+      Long smsSloganTextColor = -1L;
+      if(null != call.argument("smsSloganTextColor")) {
+        smsSloganTextColor = call.argument("smsSloganTextColor");
+      }
 
+      ///自定义控件 授权页面允许开发者在授权页面titlebar和body添加自定义的控件
       String customTitleBtnText = call.argument("customTitleBtnText");
-      int customTitleBtnTextColor = -1;
+      Long customTitleBtnTextColor = -1L;
       if(null != call.argument("customTitleBtnTextColor")) {
         customTitleBtnTextColor = call.argument("customTitleBtnTextColor") ;
       }
@@ -150,7 +217,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       }
 
       String customBodyBtnText = call.argument("customBodyBtnText");
-      int customBodyBtnTextColor = -1;
+      Long customBodyBtnTextColor = -1L;
       if(null != call.argument("customBodyBtnTextColor")) {
         customBodyBtnTextColor = call.argument("customBodyBtnTextColor") ;
       }
@@ -177,48 +244,64 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
         useCmccSms = call.argument("useCmccSms");
       }
 
+
       mobileAuth.initDynamicButton(
-              new MobileCustomButton(registrar.activeContext(),1,customTitleBtnText,customTitleBtnTextColor,customTitleBtnTextSize,0),
-              new MobileCustomButton(registrar.activeContext(),2,customBodyBtnText,customBodyBtnTextColor,customBodyBtnTextSize,customBodyBtnOffsetY));
+              new MobileCustomButton(registrar.activeContext(),1,customTitleBtnText,customTitleBtnTextColor.intValue(),customTitleBtnTextSize,0),
+              new MobileCustomButton(registrar.activeContext(),2,customBodyBtnText,customBodyBtnTextColor.intValue(),customBodyBtnTextSize,customBodyBtnOffsetY));
 
       mobileAuth.initWindowSytle(new AuthThemeConfig.Builder()
-                      .setNavColor(navColor)
+                      .setNavColor(navColor.intValue())
                       .setNavText(navText)
-                      .setNavTextColor(navTextColor)
+                      .setNavTextColor(navTextColor.intValue())
                       .setNavReturnImgPath(navReturnImgPath)
+                      .setAuthNavTransparent(authNavTransparent)
+                      .setAuthBGImgPath(authBGImgPath)
                       .setLogoImgPath(logoImgPath)
                       .setLogoWidthDip(logoWidth)
                       .setLogoHeightDip(logoHeight)
                       .setLogoOffsetY(logoOffsetY)
+                      .setLogoOffsetY_B(logoOffsetY_B)
                       .setLogoHidden(logoHidden)
-                      .setNumberColor(numberColor)
+                      .setNumberColor(numberColor.intValue())
+                      .setNumberSize(numberSize)
                       .setNumFieldOffsetY(numFieldOffsetY)
-                      .setSwitchAccTextColor(switchAccTextColor)
-                      .setSwitchAccHidden(switchAccHidden)
-                      .setSwitchOffsetY(switchAccOffsetY)
+                      .setNumFieldOffsetY_B(numFieldOffsetY_B)
                       .setLogBtnText(logBtnText)
-                      .setLogBtnTextColor(logBtnTextColor)
-                      .setLogBtnImgPath(logBtnBackgroundPath)
+                      .setLogBtnTextColor(logBtnTextColor.intValue())
+                      .setLogBtnImgPath(logBtnImgPath)
                       .setLogBtnOffsetY(logBtnOffsetY)
-                      .setClauseOne(clauseName,clauseUrl)
-                      .setClauseTwo(clauseNameTwo,clauseUrlTwo)
-                      .setClauseColor(clauseBaseColor,clauseColor)
+                      .setLogBtnOffsetY_B(logBtnOffsetY_B)
+                      .setSwitchAccHidden(switchAccHidden)
+                      .setSwitchAccTextColor(switchAccTextColor.intValue())
+                      .setSwitchOffsetY(switchOffsetY)
+                      .setSwitchOffsetY_B(switchOffsetY_B)
+                      .setClauseOne(clauseOneName,clauseOneUrl)
+                      .setClauseTwo(clauseTwoName,clauseTwoUrl)
+                      .setClauseColor(clauseColorBase.intValue(),clauseColorAgree.intValue())
                       .setUncheckedImgPath(uncheckedImgPath)
                       .setCheckedImgPath(checkedImgPath)
-                      .setSloganTextColor(sloganTextColor)
-                      .setSloganOffsetY(sloganOffsetY)
                       .setPrivacyOffsetY(privacyOffsetY)
-                      .setSmsLogBtnText(smsLogBtnText)
-                      .setSmsLogBtnImgPath(smsLogBtnImgPath)
-                      .setSmsLogBtnTextColor(smsLogBtnTextColor)
+                      .setPrivacyOffsetY_B(privacyOffsetY_B)
+                      .setSloganTextColor(sloganTextColor.intValue())
+                      .setSloganOffsetY(sloganOffsetY)
+                      .setSloganOffsetY_B(sloganOffsetY_B)
+                      .setSmsNavTransparent(smsNavTransparent)
                       .setSmsNavText(smsNavText)
+                      .setSmsLogBtnText(smsLogBtnText)
+                      .setSmsLogBtnTextColor(smsLogBtnTextColor.intValue())
+                      .setSmsLogBtnImgPath(smsLogBtnImgPath)
+                      .setSmsBGImgPath(smsBGImgPath)
+                      .setSmsCodeImgPath(smsCodeImgPath)
+                      .setSmsCodeBtnTextColor(smsCodeBtnTextColor.intValue())
+                      .setSmsSloganTextColor(smsSloganTextColor.intValue())
+                      .setPrivacyState(privacyState)
                       .build(),
               cmccDebug,
               useCmccSms,
               customTitleBtnHidden,
               customBodyBtnHidden
       );
-      result.success("sucess");
+      //result.success("sucess");
       return true;
     }
     return false;
@@ -229,9 +312,9 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
     if(initPlugin(call,result)){
       return;
     }
-    if(setMobileAuthThemeConfig(call,result)){
-      return;
-    }
+//    if(setMobileAuthThemeConfig(call,result)){
+//      return;
+//    }
 
     //检验权限
     if( !permissionManager.requestPermission() ){
@@ -244,6 +327,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
     }else if (call.method.equals("preGetphoneInfo")) {
       mobileAuth.preGetphoneInfo(result);
     }else if (call.method.equals("displayLogin")) {
+      setMobileAuthThemeConfig(call,result);
       mobileAuth.displayLogin(result);
     }else if (call.method.equals("implicitLogin")) {
         mobileAuth.implicitLogin(result);

@@ -23,10 +23,8 @@ public class MobileAuth {
     private String LOG_TAG = "flutter_cmcc_auth";
 
     private final Activity flutter_activity;
-    private MethodChannel.Result flutter_result;
     private AuthnHelper mAuthnHelper;
-
-    //public String mResultString;
+    private int btnType = 0;
 
     private String[] operatorArray = {"未知","移动","联通","电信"};
     private String[] networkArray = {"未知","数据流量","纯WiFi","流量+WiFi"};
@@ -62,36 +60,31 @@ public class MobileAuth {
         AuthnHelper.setDebugMode(cmccDebug);
         mAuthnHelper.SMSAuthOn(useCmccSms); //允许使用短信验证码
         mAuthnHelper.setAuthThemeConfig(themeConfig);
+        btnType = 0;
 
         if(!titleBtnHidden){
-            mAuthnHelper.addAuthRegistViewConfig("title_button_umcskd_authority_finish",new AuthRegisterViewConfig.Builder()
+            mAuthnHelper.addAuthRegistViewConfig("title_button_new",new AuthRegisterViewConfig.Builder()
                     .setView(mTitleBtn)
                     .setRootViewId(AuthRegisterViewConfig.RootViewId.ROOT_VIEW_ID_TITLE_BAR)
                     .setCustomInterface(new CustomInterface() {
                         @Override
                         public void onClick(Context context) {
-                            //Toast.makeText(context,"动态注册的其他按钮",Toast.LENGTH_SHORT).show();
-                            Map<String, String> resultMap = new HashMap<String,String>();
-                            resultMap.put("resultCode","000000");
-                            resultMap.put("btnType",""+MobileCustomButton.TITLE_BTN);
-                            flutter_result.success(resultMap);
+                            btnType = MobileCustomButton.TITLE_BTN;
+                            mAuthnHelper.quitAuthActivity();
                         }
                     })
                     .build()
             );
         }
         if(!bodyBtnHidden){
-            mAuthnHelper.addAuthRegistViewConfig("other_button_umcskd_authority_finish",new AuthRegisterViewConfig.Builder()
+            mAuthnHelper.addAuthRegistViewConfig("body_button_new",new AuthRegisterViewConfig.Builder()
                     .setView(mBtn)
                     .setRootViewId(AuthRegisterViewConfig.RootViewId.ROOT_VIEW_ID_BODY)
                     .setCustomInterface(new CustomInterface() {
                         @Override
                         public void onClick(Context context) {
-                            //Toast.makeText(context,"动态注册的其他登录按钮",Toast.LENGTH_SHORT).show();
-                            Map<String, String> resultMap = new HashMap<String,String>();
-                            resultMap.put("resultCode","000000");
-                            resultMap.put("btnType",""+MobileCustomButton.BODY_BTN);
-                            flutter_result.success(resultMap);
+                            btnType = MobileCustomButton.BODY_BTN;
+                            mAuthnHelper.quitAuthActivity();
                         }
                     })
                     .build()
@@ -140,13 +133,13 @@ public class MobileAuth {
                         result.success(resultMap);
                     }
                 }
+                mAuthnHelper.quitAuthActivity();
             }
         };
         mAuthnHelper.getPhoneInfo(this.cmccAppId, this.cmccAppKey, this.cmccTimeout, tokenListener, CMCC_SDK_REQUEST_GET_PHONE_INFO_CODE);
     }
 
     public void displayLogin(final MethodChannel.Result result){
-        flutter_result = result;
         TokenListener tokenListener = new TokenListener(){
             @Override
             public void onGetTokenComplete(int SDKRequestCode, JSONObject jObj) {
@@ -175,10 +168,12 @@ public class MobileAuth {
                         if (jObj.has("resultDesc")) {
                             resultMap.put("resultDesc", "" + jObj.optString("resultDesc"));
                         }
+                        resultMap.put("btnType",""+btnType);
 
                         result.success(resultMap);
                     }
                 }
+                mAuthnHelper.quitAuthActivity();
             }
         };
         mAuthnHelper.loginAuth(this.cmccAppId, this.cmccAppKey, tokenListener, CMCC_SDK_REQUEST_LOGIN_AUTH_CODE);
@@ -208,6 +203,7 @@ public class MobileAuth {
                         result.success(resultMap);
                     }
                 }
+                mAuthnHelper.quitAuthActivity();
             }
         };
         mAuthnHelper.mobileAuth(this.cmccAppId, this.cmccAppKey, tokenListener, CMCC_SDK_REQUEST_MOBILE_AUTH_CODE);

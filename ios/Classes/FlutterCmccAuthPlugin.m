@@ -43,7 +43,8 @@
   }else if ([@"preGetphoneInfo" isEqualToString:call.method]) {
     [MobileAuth preGetphoneInfo:result];
   }else if ([@"displayLogin" isEqualToString:call.method]) {
-    [MobileAuth displayLogin:_viewController result:result];
+    NSDictionary *paramDict = call.arguments;
+    [MobileAuth displayLogin:_viewController modeParam:paramDict result:result];
   }else if ([@"implicitLogin" isEqualToString:call.method]) {
     [MobileAuth implicitLogin:result];
   } else {

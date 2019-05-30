@@ -44,6 +44,11 @@ android {
     lintOptions {
         disable 'InvalidPackage'
     }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res', 'src/main/res-umc']
+        }
+    }
 }
 
 repositories {
@@ -53,6 +58,7 @@ repositories {
 }
 
 dependencies {
+    compile fileTree(include: ['*.jar','*.aar'], dir: 'libs')
     api 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation files('libs/quick_login_android_5.6.4.aar')
+    //implementation files('libs/quick_login_android_5.6.5.aar')
 }

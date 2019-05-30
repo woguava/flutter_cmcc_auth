@@ -38,9 +38,9 @@ class FlutterCmccAuth {
     _registerInit = true;
   }
 
-  static Future<void> authThemeConfig(CMCCAuthThemeConfig themeconfig) async {
-    await _channel.invokeMethod('mobileAuthThemeConfig',themeconfig.toJson());
-  }
+//  static Future<void> authThemeConfig(CMCCAuthThemeConfig themeconfig) async {
+//    await _channel.invokeMethod('mobileAuthThemeConfig',themeconfig.toJson());
+//  }
 
 
    /// 需要权限：READ_PHONE_STATE， ACCESS_NETWORK_STATE
@@ -90,7 +90,7 @@ class FlutterCmccAuth {
   }
 
   ///显示一键登录
-  static Future<CMCCMobileAuthResult> get displayLogin async {
+  static Future<CMCCMobileAuthResult>  displayLogin(CMCCAuthThemeConfig themeconfig) async {
     if(!_registerInit){
       final CMCCMobileAuthResult result = new CMCCMobileAuthResult();
       result.setProcResult(-1, "未初始化[ mobileRegister ]");
@@ -98,16 +98,14 @@ class FlutterCmccAuth {
     }
 
     try{
-      var res =  await _channel.invokeMethod('displayLogin');
+      var res =  await _channel.invokeMethod('displayLogin',themeconfig.toJson());
 
       CMCCMobileAuthResult result = new CMCCMobileAuthResult();
       if( res['resultCode'] == "103000"){
         result.setProcResult(0, "成功",data:res);
       }else if(res['resultCode'] == "200020"){
         result.setProcResult(-2, "用户取消登录",data:res);
-      } else if(res['resultCode'] == "000000"){
-        result.setProcResult(-2, "用户切换登录",data:res);
-      }else{
+      } else{
         result.setProcResult(-1, "失败",data:res);
       }
       return result;
