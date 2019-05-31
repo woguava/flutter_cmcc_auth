@@ -45,12 +45,12 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
   private boolean setMobileAuthThemeConfig(MethodCall call, Result result){
     if (call.method.equals("displayLogin")) {
       ///授权页导航栏
-      Long navColor = -1L;
+      Number navColor = -1;
       if(null != call.argument("navColor")){
         navColor = call.argument("navColor");
       }
       String navText = call.argument("navText");
-      Long navTextColor = -1L;
+      Number navTextColor = -1;
       if(null != call.argument("navTextColor")){
         navTextColor = call.argument("navTextColor");
       }
@@ -84,7 +84,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
         logoHidden = call.argument("logoHidden");
       }
       ///授权页号码栏
-      Long numberColor = -1L;
+      Number numberColor = -1;
       if(null != call.argument("numberColor")) {
         numberColor = call.argument("numberColor");
       }
@@ -103,7 +103,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
 
       ///授权页登录按钮
       String logBtnText = call.argument("logBtnText");
-      Long logBtnTextColor = -1L;
+      Number logBtnTextColor = -1;
       if(null != call.argument("logBtnTextColor")) {
         logBtnTextColor = call.argument("logBtnTextColor");
       }
@@ -122,7 +122,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       if(null != call.argument("switchAccHidden")) {
         switchAccHidden = call.argument("switchAccHidden");
       }
-      Long switchAccTextColor = -1L;
+      Number switchAccTextColor = -1;
       if(null != call.argument("switchAccTextColor")) {
         switchAccTextColor = call.argument("switchAccTextColor");
       }
@@ -140,11 +140,11 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       String clauseOneUrl = call.argument("clauseOneUrl");
       String clauseTwoName = call.argument("clauseTwoName");
       String clauseTwoUrl = call.argument("clauseTwoUrl");
-      Long clauseColorBase = -10066330L;
+      Number clauseColorBase = -10066330;
       if(null != call.argument("clauseColorBase")) {
         clauseColorBase = call.argument("clauseColorBase");
       }
-      Long clauseColorAgree = -16007674L;
+      Number clauseColorAgree = -16007674;
       if (null != call.argument("clauseColorAgree")) {
         clauseColorAgree = call.argument("clauseColorAgree");
       }
@@ -165,7 +165,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
 
 
       ///授权页slogan
-      Long sloganTextColor = -16007674L;
+      Number sloganTextColor = -16007674L;
       if(null != call.argument("sloganTextColor")) {
         sloganTextColor = call.argument("sloganTextColor");
       }
@@ -185,25 +185,25 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       }
       String smsNavText = call.argument("smsNavText");
       String smsLogBtnText = call.argument("smsLogBtnText");
-      Long smsLogBtnTextColor = -1L;
+      Number smsLogBtnTextColor = -1;
       if(null != call.argument("smsLogBtnTextColor")) {
         smsLogBtnTextColor = call.argument("smsLogBtnTextColor");
       }
       String smsLogBtnImgPath = call.argument("smsLogBtnImgPath");
       String smsBGImgPath = call.argument("smsBGImgPath");
       String smsCodeImgPath = call.argument("smsCodeImgPath");
-      Long smsCodeBtnTextColor = -1L;
+      Number smsCodeBtnTextColor = -1;
       if(null != call.argument("smsCodeBtnTextColor")) {
         smsCodeBtnTextColor = call.argument("smsCodeBtnTextColor");
       }
-      Long smsSloganTextColor = -1L;
+      Number smsSloganTextColor = -1;
       if(null != call.argument("smsSloganTextColor")) {
         smsSloganTextColor = call.argument("smsSloganTextColor");
       }
 
       ///自定义控件 授权页面允许开发者在授权页面titlebar和body添加自定义的控件
       String customTitleBtnText = call.argument("customTitleBtnText");
-      Long customTitleBtnTextColor = -1L;
+      Number customTitleBtnTextColor = -1;
       if(null != call.argument("customTitleBtnTextColor")) {
         customTitleBtnTextColor = call.argument("customTitleBtnTextColor") ;
       }
@@ -217,7 +217,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       }
 
       String customBodyBtnText = call.argument("customBodyBtnText");
-      Long customBodyBtnTextColor = -1L;
+      Number customBodyBtnTextColor = -1;
       if(null != call.argument("customBodyBtnTextColor")) {
         customBodyBtnTextColor = call.argument("customBodyBtnTextColor") ;
       }
@@ -330,7 +330,7 @@ public class FlutterCmccAuthPlugin implements MethodCallHandler {
       setMobileAuthThemeConfig(call,result);
       mobileAuth.displayLogin(result);
     }else if (call.method.equals("implicitLogin")) {
-        mobileAuth.implicitLogin(result);
+      mobileAuth.implicitLogin(result);
     } else {
       result.notImplemented();
     }
