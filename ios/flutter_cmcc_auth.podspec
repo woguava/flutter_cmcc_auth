@@ -18,4 +18,7 @@ A mobile auth Flutter plugin.
   s.ios.vendored_frameworks = 'TYRZSDK.framework'
   s.ios.resource_bundles = {'TYRZResource' => ['TYRZSDK.framework/TYRZResource.bundle/*.png'] }
   s.ios.deployment_target = '9.0'
+  s.static_framework = true
+
+  s.prefix_header_contents = '#import <TYRZSDK/UACustomModel.h>','#import <flutter_cmcc_auth/FlutterCmccAuthPlugin.h>'
 end
